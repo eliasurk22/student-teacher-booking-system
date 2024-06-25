@@ -210,9 +210,9 @@
           <input type="email" v-model="messageTeacherEmail" placeholder="Teacher Email" required>
           <textarea v-model="messageContent" placeholder="Message" required></textarea>
           <button type="submit">Send Message</button>
-          <div v-if="successMessage" class="message-container">
-            <span class="message success-message">{{ successMessage }}</span>
-          </div>
+          <!-- Display success and error messages as needed -->
+          <p v-if="successMessage">{{ successMessage }}</p>
+          <p v-if="errorMessage">{{ errorMessage }}</p>
         </form>
 
         <h3>Search Teacher</h3>
