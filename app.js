@@ -193,30 +193,87 @@ new Vue({
         });
     },
     sendMessage() {
-      db.collection('messages').add({
-        teacherEmail: this.messageTeacherEmail,
-        studentEmail: firebase.auth().currentUser.email,
-        content: this.messageContent
-      }).then(() => {
-        this.successMessage = 'Message sent successfully';
+      if (!this.messageTeacherEmail || !this.messageContent) {
+        throw new Error ('Teacher Email and Message Content are required.');
         this.handleMessageDisplay();
-      }).catch(error => {
-        this.errorMessage = error.message;
-        this.handleMessageDisplay();
-      });
-    },
+        return; 
+      }
+      db.collection('pendingTeachers')
+        .where('email', '==', this.messageTeacherEmail)
+        .get()
+        .then(querySnapshot => {
+          if (querySnapshot.empty) {
+            throw new Error ('Teacher email not found in pending registrations.');
+            this.handleMessageDisplay();
+          } else {
+            db.collection('messages').add({
+              teacherEmail: this.messageTeacherEmail,
+              studentEmail: firebase.auth().currentUser.email,
+              content: this.messageContent,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+              this.messageTeacherEmail = '';
+              this.messageContent = '';
+              this.successMessage = 'Message sent successfully';
+              this.handleMessageDisplay();
+            })
+            .catch(error => {
+              this.errorMessage = 'Failed to send message: ' + error.message;
+              this.handleMessageDisplay();
+            });
+          }
+        })
+        .catch(error => {
+          this.errorMessage = 'Error checking teacher email validity: ' + error.message;
+          this.handleMessageDisplay();
+        });
+    },    
     bookAppointment() {
-      db.collection('appointments').add({
-        teacherEmail: this.appointmentTeacherEmail,
-        studentEmail: firebase.auth().currentUser.email,
-        date: this.appointmentDate,
-      }).then(() => {
-        this.successMessage = 'Appointment booked successfully';
+      // Validate input before proceeding
+      if (!this.appointmentTeacherEmail || !this.appointmentDate) {
+        this.errorMessage = 'Teacher Email and Appointment Date are required.';
         this.handleMessageDisplay();
-      }).catch(error => {
-        this.errorMessage = error.message;
-        this.handleMessageDisplay();
-      });
+        return; // Exit function early if inputs are missing
+      }
+    
+      // Check if the teacher's email exists in the "pending teachers" collection
+      db.collection('pendingTeachers')
+        .where('email', '==', this.appointmentTeacherEmail)
+        .get()
+        .then(querySnapshot => {
+          if (querySnapshot.empty) {
+            // If no matching document found, display an error
+            this.errorMessage = 'Teacher email not found in pending registrations.';
+            this.handleMessageDisplay();
+          } else {
+            // If teacher email is valid, proceed to add the appointment
+            db.collection('appointments').add({
+              teacherEmail: this.appointmentTeacherEmail,
+              studentEmail: firebase.auth().currentUser.email,
+              date: this.appointmentDate,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+              // Clear input fields after successful booking
+              this.appointmentTeacherEmail = '';
+              this.appointmentDate = '';
+              // Update success message and display it
+              this.successMessage = 'Appointment booked successfully';
+              this.handleMessageDisplay();
+            })
+            .catch(error => {
+              // Display error message if there's an issue adding the appointment
+              this.errorMessage = 'Failed to book appointment: ' + error.message;
+              this.handleMessageDisplay();
+            });
+          }
+        })
+        .catch(error => {
+          // Display error message if there's an issue with the query
+          this.errorMessage = 'Error checking teacher email validity: ' + error.message;
+          this.handleMessageDisplay();
+        });
     },
     searchTeacher() {
       db.collection('pendingTeachers')
