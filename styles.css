@@ -1,0 +1,152 @@
+@font-face {
+  font-family: 'Title Wave Regular';
+  src: url('fonts/Title Wave Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Ovo';
+  src: url('fonts/Ovo-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Ovo', Arial, sans-serif;
+  text-align: center;
+  background: url('backgroundimage.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+}
+
+header {
+  background-color: rgba(3, 52, 158, 0.471); /* Translucent dark blue */
+  color: white;
+  padding: 20px 0;
+  position: relative;
+  font-family: 'Title Wave Regular', Arial, sans-serif;
+}
+
+header img {
+  width: 50px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 50px 0;
+}
+
+.box {
+  background-color: rgba(0, 0, 18, 0);
+  border: 1px transparent #ccc;
+  padding: 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  text-align: center;
+  font-family: 'Title Wave Regular', Arial, sans-serif;
+}
+
+.box:hover {
+  transform: scale(1.05);
+}
+
+.box h2 {
+  margin: 10px 0;
+}
+
+.box img {
+  width: 100px;
+  height: 100px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+form {
+  margin: 20px;
+}
+
+input, button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  width: 80%;
+  max-width: 300px;
+  font-family: 'Ovo', Arial, sans-serif;
+}
+
+button {
+  background-color: rgba(0, 0, 139, 0.7); /* Translucent dark blue */
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Ovo', Arial, sans-serif;
+}
+
+button:hover {
+  background-color: rgba(0, 0, 139, 0.9);
+}
+
+button::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: width 0.3s, left 0.3s;
+}
+
+button:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+h1, h2, h3 {
+  color: #fff;
+  font-family: 'Title Wave Regular', Arial, sans-serif;
+}
+
+/* Add the message styles */
+.message-container {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.message {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-family: 'Title Wave Regular', Arial, sans-serif;
+  color: white;
+}
+
+.error-message {
+  background-color: rgb(112, 11, 6);
+  opacity: 1;
+}
+
+.success-message {
+  background-color: rgba(8, 164, 8, 0.605);
+  opacity: 1;
+}
